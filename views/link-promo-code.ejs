@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header"); -%>
+
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include("partials/sidebar"); -%>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include("partials/topbar"); -%>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Link Promo Code</h1>
+
+                    <form method="POST" action="/link-promo-code" style="width: 22rem;">
+                        <div class="mb-3">
+                          <label class="form-label">Promo Code Name <span style="font-size: 10px;">(Must be unique)</span></label>
+                          <input required name="promo_code" type="text" class="form-control" id="promo_name" >
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Minimum Amount <span style="font-size: 10px;"> (Optional)</span></label>
+                            <input name="minimum_amount" type="number" min="100" max="4000" class="form-control" id="minimum_amount">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Choose a coupon to link</label>
+                            <select name="coupon_id" required class="form-select form-control" aria-label="Default select example">
+                                <option disabled value="" selected>Select a coupon</option>
+                                <% coupons.data.forEach(function(coupon){ %>
+                                    <option value="<%= coupon.id %>"><%= coupon.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+
+                    <hr>
+                    <h1 class="h3 mb-4 text-gray-800">All Promo Codes</h1>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Promo Codes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Promo Code</th>
+                                            <th>Promo ID</th>
+                                            <th>Coupon Name</th>
+                                            <th>Status</th>
+                                            <th>Linked Coupon ID</th>
+                                            <th>Minimum Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% promocodes.data.forEach(function(promocode){ %>
+                                            <tr>
+                                                <% if (promocode.code === "POMPOM"){ %>
+                                                    <td><a style="color: black; font-weight: 600;">TEST2</a></td>
+                                                <% } else { %>
+                                                    <td><a style="color: black; font-weight: 600;"><%= promocode.code %></a></td>
+                                                <% } %>
+                                                <td><%= (promocode.id).slice(0 , 10) %>... <span style="display: none;"><%= promocode.id %></span> <button class="btn copyButton"><i class="fa-solid fa-copy"></i></button></td>
+                                                <td><%= promocode.coupon.name %></td>
+                                                <% if (promocode.active === true){ %>
+                                                    <td style="color: rgb(0, 200, 63);">Active</td>
+                                                <% } else { %>
+                                                    <td style="color: darkgray;">Not Active</td>
+                                                <% } %>
+                                                <td><%= promocode.coupon.id %></td>
+                                                <td>&#8377;<%= promocode.restrictions.minimum_amount / 100 %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+                <a href="/archive-promo"><button class="btn btn-danger">Archive a promocode</button> 
+                </a>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include("partials/footer"); -%>
+
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+<script>
+        $( document ).ready(function() {
+        if (<%- success === 'true' %>){
+            Swal.fire({
+  icon: 'success',
+  title: 'Promo Code Added!'
+});
+        } else if (<%- success === 'false' %>){
+            Swal.fire({
+  icon: 'error',
+  title: 'Promo Code already exists!'
+});
+        } else if (<%- success === 'error' %>){
+            Swal.fire({
+  icon: 'error',
+  title: 'Something went wrong!',
+  text: 'Please try again after sometime.'
+}); 
+        }
+
+});
+
+// copy text
+
+// Add click event listeners to all the copy buttons
+const copyButtons = document.querySelectorAll('.copyButton');
+copyButtons.forEach((button) => {
+  button.addEventListener('click', copyTextToClipboard);
+});
+
+// Function to copy the text inside the clicked <td> to the clipboard
+function copyTextToClipboard(event) {
+  const td = event.target.closest('td');
+  if (!td) return; // In case the button is not inside a <td> element
+
+  // Get the text content of the <td> element
+  const textToCopy = (td.textContent).slice(14);
+
+  // Use the Clipboard API to copy the text to the clipboard
+  navigator.clipboard.writeText(textToCopy)
+    .then(() => {
+     
+    })
+    .catch((error) => {
+      console.error('Failed to copy text:', error);
+      // Handle the error, show a message to the user, etc.
+    });
+}
+
+
+</script>
+</body>
+
+</html>

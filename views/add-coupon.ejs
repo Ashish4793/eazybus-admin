@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header"); -%>
+
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include("partials/sidebar"); -%>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include("partials/topbar"); -%>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Add Coupon</h1>
+
+                    <form id="myForm" action="/add-coupon" method="post" style="width: 22rem;">
+                        <div class="mb-3">
+                          <label class="form-label">Coupon Name</label>
+                          <input autocomplete="off" required name="coupon_name" type="text" class="form-control" id="coupon_name" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Discount Type</label>
+                            <div class="form-check">
+                                <input onclick="enableInput()" class="form-check-input" type="radio" name="flexRadioDefault" id="radio1">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                  Amount off
+                                </label>
+                              </div>
+                            <div class="form-check">
+                                <input onclick="enableInput()" class="form-check-input" type="radio" name="flexRadioDefault" id="radio2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                  Percent off
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount Off (In Rs)</label>
+                            <input disabled required name="amount_off" type="number" min="50" max="1000" class="form-control" id="amount_off" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Percent Off (In %)</label>
+                            <input disabled required name="percent_off" type="number" min="1" max="100" class="form-control" id="percent_off" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Link Product</label>
+                            <select required name="product_id" class="form-select form-control" >
+                                <option value="" disabled selected>Choose a product </option>
+                                <% products.data.forEach(function(product){ %>
+                                <option value="<%= product.id %>"><%= product.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Valid Till (In months) <span style="font-size: 10px;">Optional</span></label>
+                            <select name="valid_till" class="form-select form-control" >
+                                <option value="" selected>Choose an option</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include("partials/footer"); -%>
+
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+<script>
+            $( document ).ready(function() {
+        if (<%- success %>){
+            Swal.fire({
+  icon: 'success',
+  title: 'Coupon Created!'
+});
+        }
+
+});
+          function toggleInput(elementName) {
+  const inputField = document.getElementById(elementName);
+  if (inputField.disabled){
+    inputField.disabled = !inputField.disabled;
+  }
+}
+function disableInput(elementName) {
+  const inputField = document.getElementById(elementName);
+  inputField.disabled = true;
+
+}
+    function enableInput(){
+        if (document.getElementById("radio1").checked){
+            toggleInput("amount_off");
+            disableInput("percent_off");
+        } else if (document.getElementById("radio2").checked){
+            toggleInput("percent_off");
+            disableInput("amount_off");
+
+        }
+    }
+</script>
+<script>
+    const form = document.getElementById('myForm');
+    form.addEventListener('submit', function(event) {
+  event.preventDefault(); // Stop the form submission
+
+  // Validate the form fields
+  const amountField = document.getElementById("amount_off").value;
+  const percentField = document.getElementById("percent_off").value;
+  console.log(amountField , percentField);
+  if (amountField === '' || percentField === '') {
+    document.getElementById("myForm").submit();
+  } else {
+    Swal.fire({
+  icon: 'error',
+  title: 'Oops...',
+  text: 'Please enter only one field either amount off or percent off!'
+});
+  }
+  
+});
+</script>
+</body>
+
+</html>

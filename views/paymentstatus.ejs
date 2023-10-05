@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header")  %>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include("partials/sidebar"); -%>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include("partials/topbar"); -%>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Check Payment Status</h1>
+
+                    <div class="mb-3">
+                        <label class="form-label">Booking ID</label>
+                        <input style="width: 20rem;" id="booking_id" type="text" minlength="10" maxlength="10" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <span style="margin-left: 8.5rem;">OR</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stripe Transaction ID</label>
+                        <input style="width: 20rem;" id="tr_id" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <button onclick="triggerAPI()" class="btn btn-success">Check Status</button>
+                    </div>
+
+                    <hr>
+                    <div class="fakeloader"></div>
+
+                    <div class="mb-3">
+                        <h4 style="font-weight: bold; color: rgb(0, 206, 0); margin-bottom: 1rem;" id="head"></h4>
+                        <h5 style="display: none; font-weight: 700;" id="1">Transaction ID : <span id="got_TR_ID"></span></h5>
+                        <h5 style="display: none; font-weight: 700;" id="2">Payment Status : <span style="text-transform: capitalize;" id="got_payment_status"></span></h5>
+                        <h5 style="display: none; font-weight: 700;" id="3">Payment Method : <span style="text-transform: capitalize;" id="got_pmt"></span></h5>
+                        <h5 style="display: none; font-weight: 700;" id="4">Session Status : <span style="text-transform: capitalize;" id="got_status"></span></h5>
+                        <h5 style="display: none; font-weight: 700;" id="5">Payment Amount : <span id="got_amount"></span></h5>
+                    </div>
+                    
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include("partials/footer")  %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/loading-spinner.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+<script>
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+        function triggerAPI(){
+        Spinner();
+        Spinner.show();
+
+        const bookingID = document.getElementById("booking_id").value;
+        const transactionID = document.getElementById("tr_id").value;
+        fetch(`/get_payment_status?booking_id=${bookingID}&transaction_id=${transactionID}`)
+  .then(response => response.json())
+  .then(data => {
+    // Handle the data returned from the API
+    if(data != null){
+        if (data === "error") {
+            Spinner.hide();
+
+            Swal.fire({
+  icon: 'error',
+  title: 'Please enter only one field!',
+});
+        } else {
+
+        $("#1").show();
+        $("#2").show();
+        $("#3").show();
+        $("#4").show();
+        $("#5").show();
+        document.getElementById("head").innerHTML = "Transaction found!";
+        document.getElementById("got_TR_ID").innerHTML = data.id;
+        document.getElementById("got_payment_status").innerHTML = data.payment_status;
+        if (data.payment_status === "paid"){
+            document.getElementById("got_payment_status").style.color = 'rgb(0, 206, 0)';
+        } else {
+            document.getElementById("got_payment_status").style.color = 'rgb(217, 23, 2)';
+        }
+        document.getElementById("got_pmt").innerHTML = data.payment_method_types[0];
+        document.getElementById("got_status").innerHTML = data.status;
+        if (data.status === "complete"){
+            document.getElementById("got_status").style.color = 'rgb(0, 206, 0)';
+        } else {
+            document.getElementById("got_status").style.color = 'rgb(217, 23, 2)';
+        }
+        document.getElementById("got_amount").innerHTML = "&#8377;" + (data.amount_total/100).toString();
+        Spinner.hide();
+
+        }
+    } else {
+        $("#1").hide();
+        $("#2").hide();
+        $("#3").hide();
+        $("#4").hide();
+        $("#5").hide();
+
+        document.getElementById("head").innerHTML = "";
+        Spinner.hide();
+        Swal.fire({
+  icon: 'error',
+  title: 'No transaction found!',
+});
+    }
+    // Do something with the fruit information
+  })
+  .catch(error => {
+    // Handle any errors that occurred during the API call
+    console.error('Error:', error);
+  });
+    }
+</script>
+
+</body>
+
+</html>

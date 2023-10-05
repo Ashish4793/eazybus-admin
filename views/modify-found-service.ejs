@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header")  %>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include("partials/sidebar"); -%>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include("partials/topbar"); -%>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Modify Service</h1>
+
+                    <form id="myForm" style="width: 20rem;" method="post" action="/modify-service">
+                        <input hidden name="d_date" value="<%= service.service_date %>" id="dep_date" type="text">
+                        <input hidden name="gotserviceNo" value="<%= service.service_no %>" id="gotserviceNo" type="text">
+                    
+                        <div class="mb-3">
+                          <p>Service Number : <%= service.service_no %></p>
+                          <p>Service Date : <%= service.service_date %></p>
+
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label class="form-label">Status</label>
+                          <select required name="status" class="form-control form-select" aria-label="Default select example">
+                            <option disabled value="" selected>Choose an option</option>
+                            <% if (service.status === true){ %>
+                                <option selected value="true">Active</option>
+                                <option value="false">Departed</option>
+                            <% } else { %>
+                                <option value="true">Active</option>
+                                <option selected value="false">Departed</option>
+                            <% } %>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fare - ₹</label>
+                            <input required name="fare" id="fare" value="<%= service.fare %>" type="number" min="100" max="4000" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                    
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include("partials/footer")  %>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+          dateFormat: "dd-mm-yy",
+          maxDate: "1D",
+          minDate: "0D"
+        });
+      });
+
+</script>
+
+</body>
+
+</html>
+

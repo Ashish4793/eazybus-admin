@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header") %>
+<style>
+    .seating-map {
+        flex-wrap: wrap;
+        width: 20rem;
+    }
+
+    .seating-map-container {
+        border: 2px solid #555555;
+        border-radius: 20px;
+        padding: 10px;
+        display: block;
+    }
+
+    .myrow {
+        display: flex;
+        justify-content: center;
+    }
+
+    .seat {
+        width: 4rem;
+        height: 3rem;
+        border: 1px solid black;
+        border-radius: 10px;
+        margin: 5px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .sleeper {
+        width: 3rem;
+        height: 6rem;
+        border: 1px solid black;
+        border-radius: 10px;
+        margin: 5px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .selected {
+        background-color: #1acc8d;
+    }
+
+    .booked {
+        background-color: rgb(139, 139, 139);
+        cursor: not-allowed;
+        pointer-events: none
+    }
+
+    .seat-number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: black !important;
+    }
+
+    .seat-gap {
+        margin-right: 40px;
+    }
+
+
+    .not-show {
+        border: none;
+    }
+
+    .toast { opacity: 10 !important; }
+</style>
+    <body id="page-top">
+
+        <!-- Page Wrapper -->
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <%- include("partials/sidebar"); -%>
+                <!-- End of Sidebar -->
+
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <!-- Main Content -->
+                    <div id="content">
+
+                        <!-- Topbar -->
+                        <%- include("partials/topbar"); -%>
+                            <!-- End of Topbar -->
+
+                            <!-- Begin Page Content -->
+                            <div class="container-fluid">
+
+                                <!-- Page Heading -->
+                                <h1 class="h3 mb-4 text-gray-800">Seat Blocking</h1>
+
+                                <main id="main">
+                                    <section style="margin-top: 4rem; margin-bottom: 6rem;">
+                                        <div class="container">
+
+                                            <p style="color: #bf4306;" class="text-center">Service No : <%= sno %> , Service Date : <%= sdate %></p>
+                            
+                                            <h3 style="margin-bottom: 1rem; font-weight: 600;" class="text-center">
+                                                Seat Map</h3>
+                                        </div>
+
+
+                                        <form id="bookingForm" action="/seat-block-confirm" method="post">
+                                            <div class=" d-flex align-items-center justify-content-center ">
+                                                <div class="seating-map-container">
+                                                    <div id="seating-map" class="seating-map">
+                                                        <div class="myrow">
+                                                            <div class="seat seat-booked not-show" data-seat="0A">
+                                                                <span style="color: white;" class="seat-number"></span>
+                                                            </div>
+                                                            <div class="seat seat-booked seat-gap not-show"
+                                                                data-seat="0B">
+                                                                <span style="color: white;" class="seat-number"></span>
+                                                            </div>
+                                                            <div class="seat seat-booked not-show" data-seat="0C">
+                                                                <span style="color: white;" class="seat-number"></span>
+                                                            </div>
+                                                            <div style="pointer-events: none; cursor: not-allowed; border: none;"
+                                                                class="seat seat-booked" data-seat="0D">
+                                                                <span class="seat-number"><img width="20" height="20"
+                                                                        src="https://img.icons8.com/external-vectorslab-glyph-vectorslab/15/000000/external-Steering-sports-and-games-vectorslab-glyph-vectorslab.png"
+                                                                        alt="external-Steering-sports-and-games-vectorslab-glyph-vectorslab" /></span>
+                                                            </div>
+
+                                                        </div>
+                                                        <hr>
+
+                                                    </div>
+                                                    <!-- Seating rows and columns -->
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Hidden input field to store the selected seats -->
+                                            <input name="service_no" type="hidden" value="<%= sno %>">
+                                            <input name="d_date" type="hidden" value="<%= sdate %>">
+                                            <input type="hidden" id="selectedSeatsInput" name="selectedSeats" value="">
+
+                                            <!-- Button to submit the form -->
+                                            <div style="margin-top: 3rem;" class="text-center">
+                                                <button type="button" class="btn btn-primary"
+                                                    style="background-color: #0b6ddd; border: none; width: 13rem;"
+                                                    onclick="submitForm()">Block
+                                            </div>
+                                        </form>
+                                    </section>
+                                </main>
+
+                            </div>
+                            <!-- /.container-fluid -->
+
+                    </div>
+                    <!-- End of Main Content -->
+
+                    <!-- Footer -->
+                    <%- include("partials/footer") %>
+                        <!-- End of Footer -->
+
+                </div>
+                <!-- End of Content Wrapper -->
+
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="/logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+        <script>
+            $(function () {
+                $("#datepicker").datepicker({
+                    dateFormat: "dd-mm-yy",
+                    maxDate: "1D",
+                    minDate: "0D"
+                });
+            });
+
+        </script>
+        <script>
+            const seatingMap = document.getElementById('seating-map');
+
+            // Define the seating arrangement (you can customize this based on your needs)
+            const busType = <%- JSON.stringify(type) %>;
+
+            let rows;
+            let seatsPerRow;
+            if (busType === "seater") {
+                rows = 9;
+                seatsPerRow = 4;
+            } else {
+                rows = 6;
+                seatsPerRow = 3;
+            }
+
+
+            // Simulated data for booked seats (you can replace this with actual data from your database)
+            const bookedSeats = <%- JSON.stringify(blockedSeats) %>;
+
+            // Initialize an array to keep track of the selected seats
+
+            const maxSeats = 6;
+
+            // Array to store the selected seat numbers
+            let selectedSeats = [];
+
+            // Function to handle seat selection
+            function selectSeat(seat) {
+                // Check if the seat is already selected
+                if (seat.classList.contains('selected')) {
+                    seat.classList.remove('selected');
+                    // Remove the seat from the selected seats array
+                    selectedSeats = selectedSeats.filter(selectedSeat => selectedSeat !== seat.getAttribute('data-seat'));
+                } else {
+                    // Check if the maximum seat selection limit is reached
+                    if (selectedSeats.length < maxSeats) {
+                        seat.classList.add('selected');
+                        // Add the seat to the selected seats array
+                        selectedSeats.push(seat.getAttribute('data-seat'));
+                        navigator.vibrate(100);
+                    } else {
+                        // Display an alert if the maximum limit is reached and user tries to select more seats
+                        navigator.vibrate(100);
+                        alertify.set('notifier','position', 'top-center');
+                        alertify.error('Max only 6 seats can be blocked at a time!');
+                    }
+                }
+
+                // Update the selected seats count
+                const selectedSeatsCount = selectedSeats.length;
+                document.getElement
+
+
+                // Enable or disable seat selection based on the selected seats count
+                const seats = document.querySelectorAll('.seat');
+                seats.forEach(seat => {
+                    seat.disabled = (selectedSeatsCount === maxSeats && !seat.classList.contains('selected'));
+                });
+            }
+
+            function submitForm() {
+                // Get all the selected seats
+                const selectedSeats = document.querySelectorAll('.seat.selected');
+
+                // Create an array to store the selected seat numbers
+                const seatNumbers = [];
+                // submit button to check array length is more than 1
+
+                // Iterate over the selected seats and extract the seat numbers
+                selectedSeats.forEach(seat => {
+                    const seatNumber = seat.getAttribute('data-seat');
+                    seatNumbers.push(seatNumber);
+                });
+
+                // Set the selected seat numbers as the value of a hidden input field
+                document.getElementById('selectedSeatsInput').value = JSON.stringify(seatNumbers);
+
+                // Submit the form
+                if (seatNumbers.length >= 1) {
+                    document.getElementById('bookingForm').submit();
+                    navigator.vibrate(100);
+                } else {
+                    navigator.vibrate(120);
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.warning('Select atleast 1 seat!');
+                }
+            }
+
+            // Generate the seating map dynamically
+            for (let i = 1; i <= rows; i++) {
+                const row = document.createElement('div');
+                row.classList.add('myrow');
+
+                for (let j = 1; j <= seatsPerRow; j++) {
+                    const seat = document.createElement('div');
+
+                    // console.log(busType);
+                    if (busType === "seater") {
+                        if (j === 2) {
+                            seat.classList.add('seat', 'seat-gap');
+                        } else {
+                            seat.classList.add('seat');
+                        }
+                    } else {
+                        if (j === 1) {
+                            seat.classList.add('seat','sleeper', 'seat-gap');
+                        } else {
+                            seat.classList.add('seat','sleeper');
+                        }
+                    }
+
+                    const seatNumber = `${i}${String.fromCharCode(64 + j)}`;
+                    seat.setAttribute('data-seat', seatNumber);
+                    seat.addEventListener('click', function () {
+                        selectSeat(this);
+                    });
+
+                    // Check if the seat is booked
+                    if (bookedSeats.includes(seatNumber)) {
+                        seat.classList.add('booked');
+                    }
+
+                    const seatNumberElement = document.createElement('span');
+                    seatNumberElement.classList.add('seat-number');
+                    seatNumberElement.textContent = seatNumber;
+
+                    seat.appendChild(seatNumberElement);
+                    row.appendChild(seat);
+                }
+
+                seatingMap.appendChild(row);
+            }
+
+        </script>
+    </body>
+
+</html>

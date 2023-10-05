@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("partials/header"); -%>
+
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include("partials/sidebar"); -%>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <%- include("partials/topbar"); -%>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Add Service</h1>
+
+                    <form>
+
+                        <div class="mb-3">
+                            <label class="form-label">Route</label>
+                            <select onchange="myFunction(event)" required class="form-control form-select" aria-label="Default select example">
+                                <option disabled selected value="">Select a option</option>
+                                <option value="Indore - Mumbai">Indore - Mumbai</option>
+                                <option value="Indore - Delhi">Indore - Delhi</option>
+                                <option value="Indore - Pune">Indore - Pune</option>
+                                <option value="Indore - Chennai">Indore - Chennai</option>
+                                <option value="Mumbai - Pune">Mumbai - Pune</option>
+                                <option value="Pune - Mumbai">Pune - Mumbai</option>
+                                <option value="Mumbai - Delhi">Mumbai - Delhi</option>
+                                <option value="Delhi - Mumbai">Delhi - Mumbai</option>
+                                <option value="Mumbai - Indore">Mumbai - Indore</option>
+                                <option value="Pune - Indore">Pune - Indore</option>
+                                <option value="Chennai - Indore">Chennai - Indore</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Origin</label>
+                            <input disabled id="origin" name="origin" type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Destination</label>
+                            <input disabled id="destination" name="destination" type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Bus Model</label>
+                            <select onchange="setBusType(event)" required class="form-control form-select">
+                                <option disabled selected value="">Select a option</option>
+                                <option value="Volvo Multi-Axle AC Seater 2+2">Volvo Multi-Axle AC Seater 2+2</option>
+                                <option value="Volvo Multi-Axle AC Sleeper 2+1">Volvo Multi-Axle AC Sleeper 2+1</option>
+                                <option value="Scania Multi-Axle AC Seater 2+2">Scania Multi-Axle AC Seater 2+2</option>
+                                <option value="Scania Multi-Axle AC Sleeper 2+1">Scania Multi-Axle AC Sleeper 2+1</option>
+                                <option value="Bharat-Benz AC Sleeper 2+1">Bharat-Benz AC Sleeper 2+1</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Bus Type</label>
+                            <input id="bus_type" name="bus_type" disabled class="form-control" type="text">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Departure Time</label>
+                            <input class="timepicker form-control" id="timePicker" type="text">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Arrival Time</label>
+                          <input class="timepicker form-control" id="timePicker2" type="text">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fare - &#8377;</label>
+                            <input class="form-control" name="fare" type="number" min="300" max="4000">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Boarding Point</label>
+                            <input class="form-control" disabled type="text" name="boarding_point" id="boarding_point">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Drop Point</label>
+                            <input class="form-control" disabled type="text" name="drop_point" id="drop_point">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Service Number</label>
+                            <input style="margin-bottom: 1rem;" id="service_no" name="service_no" disabled  maxlength="10" minlength="10" type="text" class="form-control">
+                            <button  id="getValueBtn" type="button" class="btn btn-success">Generate!</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <%- include("partials/footer"); -%>
+
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+<script>
+
+$(document).ready(function() {
+  $('#timePicker').timepicker({timeFormat : 'HH:mm' , interval : 15}); // Initialize the time picker
+  $('#timePicker2').timepicker({timeFormat : 'HH:mm' , interval : 15}); // Initialize the time picker
+
+  $('#getValueBtn').click(function() {
+    var selectedTime1 = $('#timePicker').timepicker('getTime');
+    var selectedTime2 = $('#timePicker2').timepicker('getTime');
+    var hours1 = selectedTime1.getHours();
+    var minutes1 = selectedTime1.getMinutes();
+    var hours2 = selectedTime2.getHours();
+    var minutes2 = selectedTime2.getMinutes();
+    var dep_time = ("0" + hours1).slice(-2) + ":" + ("0" + minutes1).slice(-2);
+    var arr_time = ("0" + hours2).slice(-2) + ":" + ("0" + minutes2).slice(-2);
+
+    // Do something with the formattedTime value
+    var origin = document.getElementById("origin").value;
+    var destination= document.getElementById("destination").value;
+    if (origin === "Indore"){
+        var og = "IDR";
+        document.getElementById("boarding_point").value = "EazyBus Lounge - Indore";
+    } else if (origin === "Mumbai"){
+        var og = "MUM";
+        document.getElementById("boarding_point").value = "EazyBus Lounge - Mumbai";
+    } else if (origin === "Delhi"){
+        var og = "DEL";
+        document.getElementById("boarding_point").value = "EazyBus Lounge - Delhi";
+    } else if (origin === "Pune"){
+        var og = "PUN";
+        document.getElementById("boarding_point").value = "EazyBus Lounge - Pune";
+    } else if (origin === "Chennai"){
+        var og = "CHN";
+        document.getElementById("boarding_point").value = "EazyBus Lounge - Chennai"
+    }
+
+    if (destination === "Indore"){
+        var dg = "IDR";
+        document.getElementById("drop_point").value = "EazyBus Lounge - Indore"
+    } else if (destination === "Mumbai"){
+        var dg = "MUM";
+        document.getElementById("drop_point").value = "EazyBus Lounge - Mumbai"
+    } else if (destination === "Delhi"){
+        var dg = "DEL";
+        document.getElementById("drop_point").value = "EazyBus Lounge - Delhi"
+    } else if (destination === "Pune"){
+        var dg = "PUN";
+        document.getElementById("drop_point").value = "EazyBus Lounge - Pune"
+    } else if (destination === "Chennai"){
+        var dg = "CHN";
+        document.getElementById("drop_point").value = "EazyBus Lounge - Chennai"
+    }
+    var cleanedString = dep_time.replace(":", "");
+    document.getElementById("service_no").value = og+dg+cleanedString;
+  });
+});
+
+function setBusType(event){
+    if (event.target.value === "Volvo Multi-Axle AC Seater 2+2" || event.target.value === "Scania Multi-Axle AC Seater 2+2"){
+        document.getElementById("bus_type").value = "Seater";
+    } else if (event.target.value === "Volvo Multi-Axle AC Sleeper 2+1" || event.target.value === "Scania Multi-Axle AC Sleeper 2+1" || event.target.value === "Bharat-Benz AC Sleeper 2+1") {
+        document.getElementById("bus_type").value = "Sleeper";
+    }
+}
+
+function myFunction(event) {
+  if (event.target.value === "Indore - Mumbai") {
+    document.getElementById("origin").value = "Indore";
+    document.getElementById("destination").value = "Mumbai";
+  } else if (event.target.value === "Indore - Delhi") {
+    document.getElementById("origin").value = "Indore";
+    document.getElementById("destination").value = "Delhi";
+  } else if (event.target.value === "Indore - Chennai") {
+    document.getElementById("origin").value = "Indore";
+    document.getElementById("destination").value = "Chennai";
+  } else if (event.target.value === "Indore - Pune") {
+    document.getElementById("origin").value = "Indore";
+    document.getElementById("destination").value = "Pune";
+  } else if (event.target.value === "Mumbai - Pune") {
+    document.getElementById("origin").value = "Mumbai";
+    document.getElementById("destination").value = "Pune";
+  } else if (event.target.value === "Pune - Mumbai") {
+    document.getElementById("origin").value = "Pune";
+    document.getElementById("destination").value = "Mumbai";
+  } else if (event.target.value === "Delhi - Mumbai") {
+    document.getElementById("origin").value = "Delhi";
+    document.getElementById("destination").value = "Mumbai";
+  } else if (event.target.value === "Mumbai - Delhi") {
+    document.getElementById("origin").value = "Mumbai";
+    document.getElementById("destination").value = "Delhi";
+  } else if (event.target.value === "Delhi - Indore") {
+    document.getElementById("origin").value = "Delhi";
+    document.getElementById("destination").value = "Indore";
+  } else if (event.target.value === "Mumbai - Indore") {
+    document.getElementById("origin").value = "Mumbai";
+    document.getElementById("destination").value = "Indore";
+  } else if (event.target.value === "Pune - Indore") {
+    document.getElementById("origin").value = "Pune";
+    document.getElementById("destination").value = "Indore";
+  } else if (event.target.value === "Chennai - Indore") {
+    document.getElementById("origin").value = "Chennai";
+    document.getElementById("destination").value = "Indore";
+  }
+};
+
+
+</script>
+</body>
+
+</html>
