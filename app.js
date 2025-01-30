@@ -1998,7 +1998,7 @@ app.get('/profile' , (req,res) => {
 
 connectDB().then(() => {
     console.log("eazybusDB CONNECTED SUCCESFULLY");
-    app.listen(3000, () => {
+    app.listen(process.env.PORT || 3000, () => {
         console.log("EazyBus-ADMIN Server STARTED on PORT 3000");
     })
 });
